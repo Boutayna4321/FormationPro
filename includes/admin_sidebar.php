@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 <?php
 // Déterminer la page actuelle pour activer le bon lien
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -443,7 +445,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="nav-section">Tableau de Bord</div>
         <div class="nav-item">
             <a href="../admin/dashboard.php" class="nav-link <?php echo ($current_page == 'dashboard.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">📊</span>
+                <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
                 <span class="nav-text">Dashboard</span>
             </a>
         </div>
@@ -452,19 +454,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="nav-section">Gestion Contenus</div>
         <div class="nav-item">
             <a href="../admin/domains.php" class="nav-link <?php echo ($current_page == 'domains.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">🎯</span>
+                <span class="nav-icon"><i class="fas fa-sitemap me-1"></i></span>
                 <span class="nav-text">Domaines</span>
             </a>
         </div>
         <div class="nav-item">
             <a href="../admin/sujet.php" class="nav-link <?php echo ($current_page == 'sujet.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">📚</span>
+                <span class="nav-icon"><i class="fas fa-book"></i></span>
                 <span class="nav-text">Sujets</span>
             </a>
         </div>
         <div class="nav-item">
             <a href="../admin/cours.php" class="nav-link <?php echo ($current_page == 'cours.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">📖</span>
+                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
                 <span class="nav-text">Cours</span>
             </a>
         </div>
@@ -473,13 +475,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="nav-section">Formations</div>
         <div class="nav-item">
             <a href="../admin/formation_admin.php" class="nav-link <?php echo ($current_page == 'formation_admin.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">🎓</span>
+                <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
                 <span class="nav-text">Formations</span>
             </a>
         </div>
         <div class="nav-item">
             <a href="../admin/formateurs.php" class="nav-link <?php echo ($current_page == 'formateurs.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">👨‍🏫</span>
+                <span class="nav-icon"><i class="fas fa-user-tie me-1"></i></span>
                 <span class="nav-text">Formateurs</span>
             </a>
         </div>
@@ -488,13 +490,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="nav-section">Géographie</div>
         <div class="nav-item">
             <a href="../admin/pays.php" class="nav-link <?php echo ($current_page == 'pays.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">🌍</span>
+                <span class="nav-icon"><i class="fas fa-globe"></i></span>
                 <span class="nav-text">Pays</span>
             </a>
         </div>
         <div class="nav-item">
             <a href="../admin/villes.php" class="nav-link <?php echo ($current_page == 'villes.php') ? 'active' : ''; ?>" role="menuitem">
-                <span class="nav-icon">🏙️</span>
+                <span class="nav-icon"><i class="fas fa-city"></i></span>
                 <span class="nav-text">Villes</span>
             </a>
         </div>
@@ -503,7 +505,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- Footer -->
     <div class="sidebar-footer">
         <a href="../admin/logout.php" class="logout-link" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')" role="menuitem">
-            <span class="nav-icon">🚪</span>
+            <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
             <span class="nav-text">Déconnexion</span>
         </a>
     </div>

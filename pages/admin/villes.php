@@ -70,102 +70,27 @@ $pays = getAllPays($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Villes</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .form-container {
+            font-family: 'Arial', sans-serif;
             background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.6;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .btn-danger {
-            background: #dc3545;
-        }
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .actions {
-            display: flex;
-            gap: 5px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .loading {
+
+        /* Écran de chargement */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -175,12 +100,11 @@ $pays = getAllPays($conn);
             gap: 1.5rem;
         }
 
-        .loading.hidden {
+        .loading-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Spinner Gradient avec couleurs FormationPro */
         .spinner-gradient {
             width: 60px;
             height: 60px;
@@ -209,17 +133,11 @@ $pays = getAllPays($conn);
             border-radius: 50%;
         }
 
-        /* Animation de rotation */
         @keyframes spin {
-            0% { 
-                transform: rotate(0deg);
-            }
-            100% { 
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Texte de chargement */
         .loading-text {
             font-size: 1.2rem;
             color: #2c3e50;
@@ -240,7 +158,6 @@ $pays = getAllPays($conn);
             100% { content: ''; }
         }
 
-        /* Logo FormationPro sous le spinner */
         .loading-logo {
             font-size: 1.5rem;
             font-weight: bold;
@@ -251,182 +168,383 @@ $pays = getAllPays($conn);
             margin-top: 0.5rem;
         }
 
-        /* Contenu après chargement */
-        .demo-content {
-            display: none;
+        /* Contenu principal */
+        .main-content {
+            margin-left: 280px;
             padding: 2rem;
-            text-align: center;
-            margin-top: 100px;
+            min-height: 100vh;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
         }
 
-        .demo-content.show {
-            display: block;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .demo-title {
+        .page-title {
             font-size: 2.5rem;
+            margin-bottom: 2rem;
             background: linear-gradient(135deg, #2c3e50, #3498db);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: bold;
+        }
+
+        /* Styles des cartes */
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Styles des alertes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: none;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-dismissible {
+            padding-right: 3rem;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        /* Styles des formulaires */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .demo-text {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
+        .form-group {
+            flex: 1;
+            min-width: 200px;
         }
 
-         .spinner-large {
-            width: 80px;
-            height: 80px;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
         }
 
-        .spinner-large::before {
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Styles des boutons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Styles des tableaux */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Liens */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+                padding-top: 4rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-group {
+                min-width: auto;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-<div class="loading" id="loading">
+    <!-- Écran de chargement -->
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner-gradient"></div>
         <div class="loading-text">Chargement</div>
         <div class="loading-logo">FormationPro</div>
     </div>
-    </div>
 
-    <a href="dashboard.php" class="back-link">← Retour au tableau de bord</a>
-    
-    <h1>Gestion des Villes</h1>
-
-    <?php if ($message): ?>
-        <div class="message <?= $messageType ?>">
-            <?= htmlspecialchars($message) ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- Formulaire d'ajout -->
-    <div class="form-container">
-        <h2>Ajouter une nouvelle ville</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="nom_ville">Nom de la ville :</label>
-                <input type="text" id="nom_ville" name="nom_ville" required>
-            </div>
+    <!-- Contenu principal -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <a href="dashboard.php" class="back-link">← Retour au tableau de bord</a>
             
-            <div class="form-group">
-                <label for="pays_id">Pays :</label>
-                <select id="pays_id" name="pays_id" required>
-                    <option value="">Sélectionner un pays</option>
-                    <?php foreach ($pays as $p): ?>
-                        <option value="<?= $p['id'] ?>">
-                            <?= htmlspecialchars($p['nom_pays']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <input type="hidden" name="action" value="ajouter">
-            <button type="submit">Ajouter la ville</button>
-        </form>
-    </div>
+            <h1 class="page-title">Gestion des Villes</h1>
 
-    <!-- Liste des villes -->
-    <h2>Liste des villes existantes</h2>
-    
-    <?php if (empty($villes)): ?>
-        <p>Aucune ville trouvée. Ajoutez la première ville ci-dessus.</p>
-    <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom de la ville</th>
-                    <th>Pays</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($villes as $ville): ?>
-                <tr>
-                    <form method="POST" style="display: contents;">
-                        <td><?= $ville['id'] ?></td>
-                        <td>
-                            <input type="text" name="nom_ville" 
-                                   value="<?= htmlspecialchars($ville['nom_ville']) ?>" 
-                                   required style="width: 200px;">
-                        </td>
-                        <td>
-                            <select name="pays_id" required style="width: 200px;">
-                                <?php foreach ($pays as $p): ?>
-                                    <option value="<?= $p['id'] ?>" 
-                                            <?= ($p['id'] == $ville['pays_id']) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($p['nom_pays']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <input type="hidden" name="id" value="<?= $ville['id'] ?>">
-                                <button type="submit" name="action" value="modifier">
-                                    Modifier
-                                </button>
-                                <button type="submit" name="action" value="supprimer" 
-                                        class="btn-danger"
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ? Cette action supprimera aussi toutes les formations associées.');">
-                                    Supprimer
-                                </button>
+            <?php if ($message): ?>
+                <div class="alert alert-<?= $messageType == 'success' ? 'success' : 'danger' ?> alert-dismissible">
+                    <strong><?= $messageType == 'success' ? 'Succès!' : 'Erreur!' ?></strong>
+                    <?= htmlspecialchars($message) ?>
+                    <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+            <?php endif; ?>
+
+            <!-- Formulaire d'ajout -->
+            <div class="card">
+                <div class="card-header">
+                    Ajouter une nouvelle ville
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nom_ville" class="form-label">Nom de la ville :</label>
+                                <input type="text" class="form-control" id="nom_ville" name="nom_ville" required>
                             </div>
-                        </td>
+                            
+                            <div class="form-group">
+                                <label for="pays_id" class="form-label">Pays :</label>
+                                <select class="form-select" id="pays_id" name="pays_id" required>
+                                    <option value="">Sélectionner un pays</option>
+                                    <?php foreach ($pays as $p): ?>
+                                        <option value="<?= $p['id'] ?>">
+                                            <?= htmlspecialchars($p['nom_pays']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" name="action" value="ajouter">
+                        <button type="submit" class="btn btn-primary">Ajouter la ville</button>
                     </form>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+                </div>
+            </div>
 
-    <div style="margin-top: 30px;">
-        <h3>Informations importantes :</h3>
-        <ul>
-            <li>Chaque ville doit être associée à un pays existant</li>
-            <li>Vous ne pouvez pas supprimer une ville qui a des formations associées</li>
-            <li>Le nom de la ville doit être unique dans le système</li>
-            <li>Assurez-vous d'avoir créé au moins un pays avant d'ajouter des villes</li>
-        </ul>
+            <!-- Liste des villes -->
+            <div class="card">
+                <div class="card-header">
+                    Liste des villes existantes
+                </div>
+                <div class="card-body">
+                    <?php if (empty($villes)): ?>
+                        <div class="alert alert-info">
+                            Aucune ville trouvée. Ajoutez la première ville ci-dessus.
+                        </div>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom de la ville</th>
+                                        <th>Pays</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($villes as $ville): ?>
+                                    <tr>
+                                        <form method="POST">
+                                            <td><?= $ville['id'] ?></td>
+                                            <td>
+                                                <input type="text" class="form-control" name="nom_ville" 
+                                                       value="<?= htmlspecialchars($ville['nom_ville']) ?>" 
+                                                       required>
+                                            </td>
+                                            <td>
+                                                <select class="form-select" name="pays_id" required>
+                                                    <?php foreach ($pays as $p): ?>
+                                                        <option value="<?= $p['id'] ?>" 
+                                                                <?= ($p['id'] == $ville['pays_id']) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($p['nom_pays']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <input type="hidden" name="id" value="<?= $ville['id'] ?>">
+                                                    <button type="submit" name="action" value="modifier" class="btn btn-primary">
+                                                        Modifier
+                                                    </button>
+                                                    <button type="submit" name="action" value="supprimer" 
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ? Cette action supprimera aussi toutes les formations associées.');">
+                                                        Supprimer
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Fonction de gestion du loading
-        function initLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
+        // Gestion de l'écran de chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const mainContent = document.getElementById('mainContent');
             
+            // Masquer l'écran de chargement après 1.5 seconde
             setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
+                loadingOverlay.classList.add('hidden');
+                mainContent.style.opacity = '1';
+            }, 1500);
+        });
 
-        // Fonction pour relancer le loading
-        function restartLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
+        // Animation des cartes au survol
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
             
-            content.classList.remove('show');
-            loading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
-         // Démarrer au chargement de la page
-        window.addEventListener('load', initLoading);
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
     </script>
 </body>
 </html>

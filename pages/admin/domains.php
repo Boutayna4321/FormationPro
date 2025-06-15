@@ -67,11 +67,10 @@ $domaines = getAllDomaines($conn);
     <style>
         /* Styles généraux */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            color: #2c3e50;
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
         
         .container {

@@ -102,11 +102,10 @@ try {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--light-gray);
-            margin-left: var(--sidebar-width);
             transition: margin-left 0.3s ease;
         }
 
-        /* Sidebar Styles - Copié du fichier original 
+        /* Sidebar Styles - Copié du fichier original */
         .sidebar {
             position: fixed;
             top: 0;

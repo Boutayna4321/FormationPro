@@ -91,181 +91,29 @@ if ($domaineId) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Sujets</title>
+    <title>Gestion des Sujets - FormationPro</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+        * {
             margin: 0;
             padding: 0;
-            color: #2c3e50;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            margin-left: 280px; /* Pour la sidebar */
-        }
-        .message {
-             padding: 15px;
-            margin: 20px 0;
-            border-radius: 10px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-left: 5px solid #dc3545;
-        }
-        .form-container {
-              max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            margin-left: 280px; 
-        }
-        .form-group {
-              margin-bottom: 20px;
-        }
-        label {
-             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #495057;
-        }
-        input, select {
-             width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-         input:focus, select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            outline: none;
-        }
-        button {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            text-align: center;
-        }
-        button:hover {
-           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-              transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-        .btn-info:hover {
-            background: #138496;
 
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-              padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-        }
-        th {
-             background-color: rgba(102, 126, 234, 0.1);
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .breadcrumb {
-            background: #e9ecef;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .breadcrumb a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        .domain-info {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .domain-info h3 {
-            margin-top: 0;
-            color: #0c5460;
-        }
-        .subject-examples {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .subject-examples h4 {
-            margin-top: 0;
-            color: #495057;
-        }
-        .subject-examples ul {
-            margin-bottom: 0;
-        }
-        .domain-badge {
-            background: #007bff;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-        }
-        .loading {
+
+        /* Écran de chargement */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -275,12 +123,11 @@ if ($domaineId) {
             gap: 1.5rem;
         }
 
-        .loading.hidden {
+        .loading-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Spinner Gradient avec couleurs FormationPro */
         .spinner-gradient {
             width: 60px;
             height: 60px;
@@ -309,17 +156,11 @@ if ($domaineId) {
             border-radius: 50%;
         }
 
-        /* Animation de rotation */
         @keyframes spin {
-            0% { 
-                transform: rotate(0deg);
-            }
-            100% { 
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Texte de chargement */
         .loading-text {
             font-size: 1.2rem;
             color: #2c3e50;
@@ -340,7 +181,6 @@ if ($domaineId) {
             100% { content: ''; }
         }
 
-        /* Logo FormationPro sous le spinner */
         .loading-logo {
             font-size: 1.5rem;
             font-weight: bold;
@@ -351,275 +191,512 @@ if ($domaineId) {
             margin-top: 0.5rem;
         }
 
-        /* Contenu après chargement */
-        .demo-content {
-            display: none;
+        /* Contenu principal */
+        .main-content {
+            margin-left: 280px;
             padding: 2rem;
-            text-align: center;
-            margin-top: 100px;
+            min-height: 100vh;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
         }
 
-        .demo-content.show {
-            display: block;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .demo-title {
+        .page-title {
             font-size: 2.5rem;
+            margin-bottom: 2rem;
             background: linear-gradient(135deg, #2c3e50, #3498db);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: bold;
+        }
+
+        /* Styles des cartes */
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Styles des alertes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: none;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .alert-dismissible {
+            padding-right: 3rem;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        /* Styles des formulaires */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .demo-text {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
+        .form-group {
+            flex: 1;
+            min-width: 200px;
         }
 
-         .spinner-large {
-            width: 80px;
-            height: 80px;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
         }
 
-        .spinner-large::before {
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
-        };
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Styles des boutons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Styles des tableaux */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Liens */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Navigation rapide */
+        .quick-nav {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quick-nav h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .quick-nav-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .quick-nav-item {
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .quick-nav-item:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
+            .main-content {
                 margin-left: 0;
-                padding: 15px;
+                padding: 1rem;
+                padding-top: 4rem;
             }
-            
-            .card-header {
-                font-size: 1rem;
-            }
-            
-            .actions {
+
+            .form-row {
                 flex-direction: column;
-                gap: 5px;
+            }
+
+            .form-group {
+                min-width: auto;
+            }
+
+            .quick-nav-items {
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 2rem;
             }
         }
-            
     </style>
 </head>
 <body>
-    <div class="loading" id="loading">
+    <!-- Écran de chargement -->
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner-gradient"></div>
         <div class="loading-text">Chargement</div>
         <div class="loading-logo">FormationPro</div>
     </div>
-    </div>
-    <div class="container" id="mainContent">
-    <?php if ($domaineInfo): ?>
-        <div class="breadcrumb">
-            <a href="dashboard.php">Tableau de bord</a> > 
-            <a href="domaines.php">Domaines</a> > 
-            <strong><?= htmlspecialchars($domaineInfo['nom_domaine']) ?></strong>
-        </div>
-        
-        <div class="domain-info">
-            <h3>📚 Gestion des sujets du domaine : <?= htmlspecialchars($domaineInfo['nom_domaine']) ?></h3>
-            <p>Vous gérez actuellement les sujets spécifiques au domaine "<strong><?= htmlspecialchars($domaineInfo['nom_domaine']) ?></strong>". 
-            Chaque sujet représente une sous-catégorie de ce domaine.</p>
-        </div>
-    <?php else: ?>
-        <a href="dashboard.php" class="back-link">← Retour au tableau de bord</a>
-    <?php endif; ?>
-    
-    <h1>Gestion des Sujets<?= $domaineInfo ? ' - ' . htmlspecialchars($domaineInfo['nom_domaine']) : '' ?></h1>
 
-    <?php if ($message): ?>
-        <div class="message <?= $messageType ?>">
-            <?= htmlspecialchars($message) ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- Exemples de sujets -->
-    <div class="subject-examples">
-        <h4>Exemples de sujets par domaine :</h4>
-        <ul>
-            <li><strong>Management</strong> : Management de Projet, Management de Services, Leadership, Ressources Humaines</li>
-            <li><strong>Computer Science</strong> : Programmation Web, Bases de Données, Intelligence Artificielle, Réseaux</li>
-            <li><strong>Marketing</strong> : Marketing Digital, Communication, Publicité, Études de Marché</li>
-            <li><strong>Finance</strong> : Analyse Financière, Comptabilité, Gestion Budgétaire, Investissements</li>
-            <li><strong>Design</strong> : Design Graphique, UX/UI, Illustration, Photographie</li>
-        </ul>
-    </div>
-
-    <!-- Formulaire d'ajout -->
-    <div class="form-container">
-        <h2>Ajouter un nouveau sujet</h2>
-        <form method="POST">
-            <?php if (!$domaineInfo): ?>
-            <div class="form-group">
-                <label for="domaine_id">Domaine :</label>
-                <select id="domaine_id" name="domaine_id" required>
-                    <option value="">Sélectionnez un domaine</option>
-                    <?php foreach ($domaines as $domaine): ?>
-                        <option value="<?= $domaine['id'] ?>"><?= htmlspecialchars($domaine['nom_domaine']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <?php else: ?>
-                <input type="hidden" name="domaine_id" value="<?= $domaineInfo['id'] ?>">
-                <div class="form-group">
-                    <label>Domaine sélectionné :</label>
-                    <input type="text" value="<?= htmlspecialchars($domaineInfo['nom_domaine']) ?>" readonly style="background-color: #e9ecef;">
+    <!-- Contenu principal -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <?php if ($domaineInfo): ?>
+                <div class="breadcrumb">
+                    <a href="dashboard.php">Tableau de bord</a> > 
+                    <a href="domaines.php">Domaines</a> > 
+                    <strong><?= htmlspecialchars($domaineInfo['nom_domaine']) ?></strong>
                 </div>
+            <?php else: ?>
+                <a href="dashboard.php" class="back-link">← Retour au tableau de bord</a>
             <?php endif; ?>
             
-            <div class="form-group">
-                <label for="nom_sujet">Nom du sujet :</label>
-                <input type="text" id="nom_sujet" name="nom_sujet" 
-                       placeholder="Ex: Management de Projet, Programmation Web, Marketing Digital..." required>
-            </div>
-            
-            <input type="hidden" name="action" value="ajouter">
-            <button type="submit">Ajouter le sujet</button>
-        </form>
-    </div>
+            <h1 class="page-title">Gestion des Sujets</h1>
 
-    <!-- Navigation rapide -->
-    <?php if (!$domaineInfo && !empty($domaines)): ?>
-    <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
-        <h4 style="color: #856404; margin-top: 0;">🔍 Navigation rapide par domaine :</h4>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <?php foreach ($domaines as $domaine): ?>
-                <a href="sujets.php?domaine_id=<?= $domaine['id'] ?>" 
-                   style="background: #007bff; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-size: 14px;">
-                    <?= htmlspecialchars($domaine['nom_domaine']) ?>
-                </a>
-            <?php endforeach; ?>
+            <?php if ($message): ?>
+                <div class="alert alert-<?= $messageType == 'success' ? 'success' : 'danger' ?> alert-dismissible">
+                    <strong><?= $messageType == 'success' ? 'Succès!' : 'Erreur!' ?></strong>
+                    <?= htmlspecialchars($message) ?>
+                    <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+            <?php endif; ?>
+
+            <!-- Formulaire d'ajout -->
+            <div class="card">
+                <div class="card-header">
+                    Ajouter un nouveau sujet
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-row">
+                            <?php if (!$domaineInfo): ?>
+                            <div class="form-group">
+                                <label for="domaine_id" class="form-label">Domaine :</label>
+                                <select class="form-select" id="domaine_id" name="domaine_id" required>
+                                    <option value="">Sélectionnez un domaine</option>
+                                    <?php foreach ($domaines as $domaine): ?>
+                                        <option value="<?= $domaine['id'] ?>"><?= htmlspecialchars($domaine['nom_domaine']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <?php else: ?>
+                                <input type="hidden" name="domaine_id" value="<?= $domaineInfo['id'] ?>">
+                                <div class="form-group">
+                                    <label class="form-label">Domaine sélectionné :</label>
+                                    <input type="text" class="form-control" value="<?= htmlspecialchars($domaineInfo['nom_domaine']) ?>" readonly style="background-color: #e9ecef;">
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="form-group">
+                                <label for="nom_sujet" class="form-label">Nom du sujet :</label>
+                                <input type="text" class="form-control" id="nom_sujet" name="nom_sujet" 
+                                       placeholder="Ex: Management de Projet, Programmation Web, Marketing Digital..." required>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" name="action" value="ajouter">
+                        <button type="submit" class="btn btn-primary">Ajouter le sujet</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Navigation rapide -->
+            <?php if (!$domaineInfo && !empty($domaines)): ?>
+            <div class="quick-nav">
+                <h4>🔍 Navigation rapide par domaine :</h4>
+                <div class="quick-nav-items">
+                    <?php foreach ($domaines as $domaine): ?>
+                        <a href="sujets.php?domaine_id=<?= $domaine['id'] ?>" class="quick-nav-item">
+                            <?= htmlspecialchars($domaine['nom_domaine']) ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Liste des sujets -->
+            <div class="card">
+                <div class="card-header">
+                    Liste des sujets<?= $domaineInfo ? ' du domaine ' . htmlspecialchars($domaineInfo['nom_domaine']) : '' ?>
+                </div>
+                <div class="card-body">
+                    <?php if (empty($sujets)): ?>
+                        <div class="alert alert-info">
+                            Aucun sujet trouvé<?= $domaineInfo ? ' pour ce domaine' : '' ?>. Ajoutez le premier sujet ci-dessus.
+                        </div>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <?php if (!$domaineInfo): ?>
+                                        <th>Domaine</th>
+                                        <?php endif; ?>
+                                        <th>Nom du sujet</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($sujets as $sujet): ?>
+                                    <tr>
+                                        <form method="POST">
+                                            <td><?= $sujet['id'] ?></td>
+                                            <?php if (!$domaineInfo): ?>
+                                            <td>
+                                                <select class="form-select" name="domaine_id" required>
+                                                    <?php foreach ($domaines as $domaine): ?>
+                                                        <option value="<?= $domaine['id'] ?>" 
+                                                                <?= $domaine['id'] == $sujet['domaine_id'] ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($domaine['nom_domaine']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                            <?php else: ?>
+                                                <input type="hidden" name="domaine_id" value="<?= $sujet['domaine_id'] ?>">
+                                            <?php endif; ?>
+                                            <td>
+                                                <input type="text" class="form-control" name="nom_sujet" 
+                                                       value="<?= htmlspecialchars($sujet['nom_sujet']) ?>" required>
+                                            </td>
+                                            <td>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <input type="hidden" name="id" value="<?= $sujet['id'] ?>">
+                                                    <button type="submit" name="action" value="modifier" class="btn btn-primary">
+                                                        Modifier
+                                                    </button>
+                                                    <a href="cours.php?sujet_id=<?= $sujet['id'] ?>" 
+                                                       class="btn btn-info">
+                                                        Voir cours
+                                                    </a>
+                                                    <button type="submit" name="action" value="supprimer" 
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce sujet ? Cette action supprimera aussi tous les cours et formations associés.');">
+                                                        Supprimer
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php if ($domaineInfo): ?>
+            <div style="margin-top: 20px;">
+                <a href="domaines.php" class="back-link">← Retour à la liste des domaines</a>
+                <span style="margin: 0 10px;">|</span>
+                <a href="sujets.php" class="back-link">Voir tous les sujets</a>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
-    <?php endif; ?>
 
-    <!-- Liste des sujets -->
-    <h2>Liste des sujets<?= $domaineInfo ? ' du domaine ' . htmlspecialchars($domaineInfo['nom_domaine']) : '' ?></h2>
-    
-    <?php if (empty($sujets)): ?>
-        <p>Aucun sujet trouvé<?= $domaineInfo ? ' pour ce domaine' : '' ?>. Ajoutez le premier sujet ci-dessus.</p>
-    <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <?php if (!$domaineInfo): ?>
-                    <th>Domaine</th>
-                    <?php endif; ?>
-                    <th>Nom du sujet</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($sujets as $sujet): ?>
-                <tr>
-                    <form method="POST" style="display: contents;">
-                        <td><?= $sujet['id'] ?></td>
-                        <?php if (!$domaineInfo): ?>
-                        <td>
-                            <select name="domaine_id" required style="width: 180px;">
-                                <?php foreach ($domaines as $domaine): ?>
-                                    <option value="<?= $domaine['id'] ?>" 
-                                            <?= $domaine['id'] == $sujet['domaine_id'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($domaine['nom_domaine']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                        <?php else: ?>
-                            <input type="hidden" name="domaine_id" value="<?= $sujet['domaine_id'] ?>">
-                        <?php endif; ?>
-                        <td>
-                            <input type="text" name="nom_sujet" 
-                                   value="<?= htmlspecialchars($sujet['nom_sujet']) ?>" 
-                                   required style="width: 300px;">
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <input type="hidden" name="id" value="<?= $sujet['id'] ?>">
-                                <button type="submit" name="action" value="modifier">
-                                    Modifier
-                                </button>
-                                <a href="cours.php?sujet_id=<?= $sujet['id'] ?>" 
-                                   class="btn-info" style="text-decoration: none; padding: 8px 16px; border-radius: 4px; color: white;">
-                                    Voir cours
-                                </a>
-                                <button type="submit" name="action" value="supprimer" 
-                                        class="btn-danger"
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce sujet ? Cette action supprimera aussi tous les cours et formations associés.');">
-                                    Supprimer
-                                </button>
-                            </div>
-                        </td>
-                    </form>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
-
-    <?php if ($domaineInfo): ?>
-    <div style="margin-top: 20px;">
-        <a href="domaines.php" class="back-link">← Retour à la liste des domaines</a>
-        <span style="margin: 0 10px;">|</span>
-        <a href="sujets.php" class="back-link">Voir tous les sujets</a>
-    </div>
-    <?php endif; ?>
-
-    <div style="margin-top: 30px;">
-        <h3>Informations importantes :</h3>
-        <ul>
-            <li><strong>Sujet</strong> : Sous-catégorie d'un domaine (ex: "Management de Projet" dans le domaine "Management")</li>
-            <li>Le nom du sujet doit être unique dans le système</li>
-            <li>Chaque sujet appartient obligatoirement à un domaine</li>
-            <li>Vous ne pouvez pas supprimer un sujet qui a des cours associés</li>
-            <li>La suppression d'un sujet supprimera automatiquement tous les cours et formations associés</li>
-            <li>Les sujets permettent d'organiser vos cours de manière logique</li>
-        </ul>
-    </div>
-
-    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
-        <h4 style="color: #856404; margin-top: 0;">💡 Conseil :</h4>
-        <p style="color: #856404; margin-bottom: 0;">
-            Un sujet regroupe des cours similaires dans un domaine. Par exemple, dans le domaine "Computer Science", 
-            vous pourriez avoir les sujets "Programmation Web", "Bases de Données", "Intelligence Artificielle", etc.
-            Gardez les noms de sujets spécifiques mais pas trop techniques.
-        </p>
-    </div>
-
-     <script>
-        // Fonction de gestion du loading
-        function initLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
+    <script>
+        // Gestion de l'écran de chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const mainContent = document.getElementById('mainContent');
             
+            // Masquer l'écran de chargement après 1.5 seconde
             setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
+                loadingOverlay.classList.add('hidden');
+                mainContent.style.opacity = '1';
+            }, 1500);
+        });
 
-        // Fonction pour relancer le loading
-        function restartLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
+        // Animation des cartes au survol
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
             
-            content.classList.remove('show');
-            loading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
-         // Démarrer au chargement de la page
-        window.addEventListener('load', initLoading);
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
     </script>
 </body>
 </html>

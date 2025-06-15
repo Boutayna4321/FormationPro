@@ -71,148 +71,31 @@ $formateurs = getAllFormateurs($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Formateurs</title>
+    <title>Gestion des Formateurs - FormationPro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .form-container {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        .form-row .form-group {
-            flex: 1;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        textarea {
-            height: 80px;
-            resize: vertical;
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
         }
-        button {
-            background: #007bff;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .btn-danger {
-            background: #dc3545;
-        }
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        .btn-info {
-            background: #17a2b8;
-        }
-        .btn-info:hover {
-            background: #138496;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .actions {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .formateur-examples {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .formateur-examples h4 {
-            margin-top: 0;
-            color: #495057;
-        }
-        .formateur-examples ul {
-            margin-bottom: 0;
-        }
-        .table-responsive {
-            overflow-x: auto;
-        }
-        .input-small {
-            width: 80px !important;
-        }
-        .input-medium {
-            width: 150px !important;
-        }
-        .input-large {
-            width: 200px !important;
-        }
-        .loading {
+
+        /* Écran de chargement */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -222,12 +105,11 @@ $formateurs = getAllFormateurs($conn);
             gap: 1.5rem;
         }
 
-        .loading.hidden {
+        .loading-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Spinner Gradient avec couleurs FormationPro */
         .spinner-gradient {
             width: 60px;
             height: 60px;
@@ -256,17 +138,11 @@ $formateurs = getAllFormateurs($conn);
             border-radius: 50%;
         }
 
-        /* Animation de rotation */
         @keyframes spin {
-            0% { 
-                transform: rotate(0deg);
-            }
-            100% { 
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Texte de chargement */
         .loading-text {
             font-size: 1.2rem;
             color: #2c3e50;
@@ -287,7 +163,6 @@ $formateurs = getAllFormateurs($conn);
             100% { content: ''; }
         }
 
-        /* Logo FormationPro sous le spinner */
         .loading-logo {
             font-size: 1.5rem;
             font-weight: bold;
@@ -298,228 +173,437 @@ $formateurs = getAllFormateurs($conn);
             margin-top: 0.5rem;
         }
 
-        /* Contenu après chargement */
-        .demo-content {
-            display: none;
+        /* Contenu principal */
+        .main-content {
+            margin-left: 280px;
             padding: 2rem;
-            text-align: center;
-            margin-top: 100px;
+            min-height: 100vh;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
         }
 
-        .demo-content.show {
-            display: block;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .demo-title {
+        .page-title {
             font-size: 2.5rem;
+            margin-bottom: 2rem;
             background: linear-gradient(135deg, #2c3e50, #3498db);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: bold;
+        }
+
+        /* Styles des cartes */
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Styles des alertes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: none;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-dismissible {
+            padding-right: 3rem;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        /* Styles des formulaires */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .demo-text {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
+        .form-group {
+            flex: 1;
+            min-width: 200px;
         }
 
-         .spinner-large {
-            width: 80px;
-            height: 80px;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
         }
 
-        .spinner-large::before {
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
+        .form-control, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        /* Styles des boutons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        /* Styles des tableaux */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Liens */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Utilitaires */
+        .input-small {
+            width: 80px !important;
+        }
+
+        .input-medium {
+            width: 150px !important;
+        }
+
+        .input-large {
+            width: 200px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+                padding-top: 4rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-group {
+                min-width: auto;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .table td, .table th {
+                padding: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="dashboard.php" class="back-link">← Retour au tableau de bord</a>
-    
-    <h1>Gestion des Formateurs</h1>
+    <!-- Écran de chargement -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-gradient"></div>
+        <div class="loading-text">Chargement</div>
+        <div class="loading-logo">FormationPro</div>
+    </div>
 
-    <?php if ($message): ?>
-        <div class="message <?= $messageType ?>">
-            <?= htmlspecialchars($message) ?>
+    <!-- Contenu principal -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <a href="dashboard.php" class="back-link">← Retour au tableau de bord</a>
+            
+            <h1 class="page-title">Gestion des Formateurs</h1>
+
+            <?php if ($message): ?>
+                <div class="alert alert-<?= $messageType == 'success' ? 'success' : 'danger' ?> alert-dismissible">
+                    <strong><?= $messageType == 'success' ? 'Succès!' : 'Erreur!' ?></strong>
+                    <?= htmlspecialchars($message) ?>
+                    <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+            <?php endif; ?>
+
+            <!-- Formulaire d'ajout -->
+            <div class="card">
+                <div class="card-header">
+                    Ajouter un nouveau formateur
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nom_formateur" class="form-label">Nom du formateur :</label>
+                                <input type="text" class="form-control" id="nom_formateur" name="nom_formateur" 
+                                       placeholder="Ex: Jean Dupont" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email_formateur" class="form-label">Email :</label>
+                                <input type="email" class="form-control" id="email_formateur" name="email_formateur" 
+                                       placeholder="Ex: jean.dupont@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telephone" class="form-label">Téléphone :</label>
+                                <input type="tel" class="form-control" id="telephone" name="telephone" 
+                                       placeholder="Ex: +33 1 23 45 67 89">
+                            </div>
+                            <div class="form-group">
+                                <label for="experience_annees" class="form-label">Années d'expérience :</label>
+                                <input type="number" class="form-control input-small" id="experience_annees" name="experience_annees" 
+                                       min="0" max="50" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="specialite" class="form-label">Spécialité :</label>
+                            <textarea class="form-control form-textarea" id="specialite" name="specialite" 
+                                      placeholder="Ex: Management de projets, Développement web, Marketing digital..."></textarea>
+                        </div>
+                        
+                        <input type="hidden" name="action" value="ajouter">
+                        <button type="submit" class="btn btn-primary">Ajouter le formateur</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Liste des formateurs -->
+            <div class="card">
+                <div class="card-header">
+                    Liste des formateurs existants
+                </div>
+                <div class="card-body">
+                    <?php if (empty($formateurs)): ?>
+                        <div class="alert alert-info">
+                            Aucun formateur trouvé. Ajoutez le premier formateur ci-dessus.
+                        </div>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Email</th>
+                                        <th>Téléphone</th>
+                                        <th>Spécialité</th>
+                                        <th>Exp.</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($formateurs as $formateur): ?>
+                                    <tr>
+                                        <form method="POST">
+                                            <td><?= $formateur['id'] ?></td>
+                                            <td>
+                                                <input type="text" class="form-control input-large" name="nom_formateur" 
+                                                       value="<?= htmlspecialchars($formateur['nom_formateur']) ?>" required>
+                                            </td>
+                                            <td>
+                                                <input type="email" class="form-control input-large" name="email_formateur" 
+                                                       value="<?= htmlspecialchars($formateur['email_formateur']) ?>" required>
+                                            </td>
+                                            <td>
+                                                <input type="tel" class="form-control input-medium" name="telephone" 
+                                                       value="<?= htmlspecialchars($formateur['telephone'] ?? '') ?>">
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control" name="specialite" 
+                                                          style="height: 40px;"><?= htmlspecialchars($formateur['specialite'] ?? '') ?></textarea>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control input-small" name="experience_annees" 
+                                                       value="<?= $formateur['experience_annees'] ?? 0 ?>" 
+                                                       min="0" max="50">
+                                            </td>
+                                            <td>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <input type="hidden" name="id" value="<?= $formateur['id'] ?>">
+                                                    <button type="submit" name="action" value="modifier" class="btn btn-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="submit" name="action" value="supprimer" 
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce formateur ? Cette action supprimera aussi toutes les formations associées.');">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
-    <?php endif; ?>
-
-    <!-- Exemples de formateurs -->
-    <div class="formateur-examples">
-        <h4>Informations sur les formateurs :</h4>
-        <ul>
-            <li><strong>Nom</strong> - Nom complet du formateur (obligatoire)</li>
-            <li><strong>Email</strong> - Adresse email unique pour la communication (obligatoire)</li>
-            <li><strong>Téléphone</strong> - Numéro de contact (optionnel)</li>
-            <li><strong>Spécialité</strong> - Domaine d'expertise principal (optionnel)</li>
-            <li><strong>Expérience</strong> - Nombre d'années d'expérience en formation</li>
-        </ul>
     </div>
 
-    <!-- Formulaire d'ajout -->
-    <div class="form-container">
-        <h2>Ajouter un nouveau formateur</h2>
-        <form method="POST">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nom_formateur">Nom du formateur :</label>
-                    <input type="text" id="nom_formateur" name="nom_formateur" 
-                           placeholder="Ex: Jean Dupont" required>
-                </div>
-                <div class="form-group">
-                    <label for="email_formateur">Email :</label>
-                    <input type="email" id="email_formateur" name="email_formateur" 
-                           placeholder="Ex: jean.dupont@email.com" required>
-                </div>
-            </div>
+    <script>
+        // Gestion de l'écran de chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const mainContent = document.getElementById('mainContent');
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="telephone">Téléphone :</label>
-                    <input type="tel" id="telephone" name="telephone" 
-                           placeholder="Ex: +33 1 23 45 67 89">
-                </div>
-                <div class="form-group">
-                    <label for="experience_annees">Années d'expérience :</label>
-                    <input type="number" id="experience_annees" name="experience_annees" 
-                           min="0" max="50" value="0">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="specialite">Spécialité :</label>
-                <textarea id="specialite" name="specialite" 
-                          placeholder="Ex: Management de projets, Développement web, Marketing digital..."></textarea>
-            </div>
-            
-            <input type="hidden" name="action" value="ajouter">
-            <button type="submit">Ajouter le formateur</button>
-        </form>
-    </div>
-
-    <!-- Liste des formateurs -->
-    <h2>Liste des formateurs existants</h2>
-    
-    <?php if (empty($formateurs)): ?>
-        <p>Aucun formateur trouvé. Ajoutez le premier formateur ci-dessus.</p>
-    <?php else: ?>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Téléphone</th>
-                        <th>Spécialité</th>
-                        <th>Exp.</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($formateurs as $formateur): ?>
-                    <tr>
-                        <form method="POST" style="display: contents;">
-                            <td><?= $formateur['id'] ?></td>
-                            <td>
-                                <input type="text" name="nom_formateur" 
-                                       value="<?= htmlspecialchars($formateur['nom_formateur']) ?>" 
-                                       required class="input-large">
-                            </td>
-                            <td>
-                                <input type="email" name="email_formateur" 
-                                       value="<?= htmlspecialchars($formateur['email_formateur']) ?>" 
-                                       required class="input-large">
-                            </td>
-                            <td>
-                                <input type="tel" name="telephone" 
-                                       value="<?= htmlspecialchars($formateur['telephone'] ?? '') ?>" 
-                                       class="input-medium">
-                            </td>
-                            <td>
-                                <textarea name="specialite" 
-                                          class="input-large" 
-                                          style="height: 40px;"><?= htmlspecialchars($formateur['specialite'] ?? '') ?></textarea>
-                            </td>
-                            <td>
-                                <input type="number" name="experience_annees" 
-                                       value="<?= $formateur['experience_annees'] ?? 0 ?>" 
-                                       min="0" max="50" class="input-small">
-                            </td>
-                            <td>
-                                <div class="actions">
-                                    <input type="hidden" name="id" value="<?= $formateur['id'] ?>">
-                                    <button type="submit" name="action" value="modifier">
-                                        Modifier
-                                    </button>
-                                    <button type="submit" name="action" value="supprimer" 
-                                            class="btn-danger"
-                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce formateur ? Cette action supprimera aussi toutes les formations associées.');">
-                                        Supprimer
-                                    </button>
-                                </div>
-                            </td>
-                        </form>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endif; ?>
-
-    <div style="margin-top: 30px;">
-        <h3>Informations importantes :</h3>
-        <ul>
-            <li><strong>Formateur</strong> : Personne qui anime les formations proposées par l'entreprise</li>
-            <li>L'adresse email du formateur doit être unique dans le système</li>
-            <li>Le nom et l'email sont obligatoires, les autres champs sont optionnels</li>
-            <li>Vous ne pouvez pas supprimer un formateur qui a des formations programmées</li>
-            <li>La suppression d'un formateur supprimera automatiquement toutes les formations associées</li>
-            <li>Les formateurs peuvent animer des formations en présentiel ou à distance</li>
-            <li>Renseignez la spécialité pour faciliter l'attribution des formations</li>
-        </ul>
-    </div>
-
-    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
-        <h4 style="color: #856404; margin-top: 0;">💡 Conseil :</h4>
-        <p style="color: #856404; margin-bottom: 0;">
-            Maintenez les informations des formateurs à jour pour faciliter la communication et l'organisation des formations. 
-            Une spécialité bien définie aide à attribuer les bonnes formations aux bons formateurs.
-        </p>
-    </div>
-
-     <script>
-        // Fonction de gestion du loading
-        function initLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
-            
+            // Masquer l'écran de chargement après 1.5 seconde
             setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
+                loadingOverlay.classList.add('hidden');
+                mainContent.style.opacity = '1';
+            }, 1500);
+        });
 
-        // Fonction pour relancer le loading
-        function restartLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
+        // Animation des cartes au survol
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
             
-            content.classList.remove('show');
-            loading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
-         // Démarrer au chargement de la page
-        window.addEventListener('load', initLoading);
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
     </script>
 </body>
 </html>
