@@ -121,25 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding-top: 80px;
         }
 
-     
-       
-
-        
-
-    
-
-        /* Main Content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
-        }
-
-        /* Page Header */
-         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
         
         /* Header */
@@ -237,19 +222,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--primary-color);
         }
 
-        /* Contact Form */
-        .contact-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: start;
-        }
+        /* Nouveau style pour la section contact */
+        
 
+        /* Nouveau style pour le formulaire */
         .contact-form {
             background: var(--white);
             border-radius: 12px;
             padding: 2.5rem;
             box-shadow: var(--shadow-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--gradient-secondary);
         }
 
         .form-header {
@@ -271,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -317,8 +310,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-textarea {
-            min-height: 120px;
+            min-height: 150px;
             resize: vertical;
+        }
+
+        /* Nouveau style pour la section carte */
+        .map-section {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            margin-top: 2rem;
+        }
+
+        .map-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--gradient-primary);
+        }
+
+        .map-header {
+            padding: 1.5rem 2rem 0;
+        }
+
+        .map-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .map-container {
+            height: 300px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            position: relative;
+        }
+
+        .map-content {
+            padding: 0 2rem 2rem;
+        }
+
+        .map-address {
+            color: var(--dark-text);
+            line-height: 1.8;
+        }
+
+        .map-address i {
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
         }
 
         /* Messages */
@@ -408,45 +455,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-left: 4px solid var(--warning-color);
         }
 
-        /* Map Section */
-        .map-section {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow-light);
-        }
-
-        .map-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .map-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .map-placeholder {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--light-text);
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-
-        .map-address {
-            text-align: center;
-            color: var(--dark-text);
-            line-height: 1.8;
-        }
-
         /* FAQ Section */
         .faq-section {
             margin-top: 3rem;
@@ -511,75 +519,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: rotate(180deg);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: rgba(255, 255, 255, 0.98);
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                padding-top: 2rem;
-                transition: left 0.3s ease;
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .nav-menu li {
-                margin: 1rem 0;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-section {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-form {
-                padding: 1.5rem;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-
-        /* Animations */
-        .slide-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: slideUp 0.6s ease forwards;
-        }
+        /* Loading */
         .loading {
             position: fixed;
             top: 0;
@@ -601,7 +541,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             pointer-events: none;
         }
 
-        /* Spinner Gradient avec couleurs FormationPro */
         .spinner-gradient {
             width: 60px;
             height: 60px;
@@ -630,7 +569,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 50%;
         }
 
-        /* Animation de rotation */
         @keyframes spin {
             0% { 
                 transform: rotate(0deg);
@@ -640,7 +578,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        /* Texte de chargement */
         .loading-text {
             font-size: 1.2rem;
             color: #2c3e50;
@@ -661,7 +598,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             100% { content: ''; }
         }
 
-        /* Logo FormationPro sous le spinner */
         .loading-logo {
             font-size: 1.5rem;
             font-weight: bold;
@@ -672,43 +608,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 0.5rem;
         }
 
-        /* Contenu après chargement */
-        .demo-content {
-            display: none;
-            padding: 2rem;
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        .demo-content.show {
-            display: block;
-        }
-
-        .demo-title {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-        }
-
-        .demo-text {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
-        }
-
-         .spinner-large {
-            width: 80px;
-            height: 80px;
-        }
-
-        .spinner-large::before {
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
+        /* Animations */
+        .slide-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.6s ease forwards;
         }
 
         @keyframes slideUp {
@@ -722,18 +626,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .stagger-2 { animation-delay: 0.2s; }
         .stagger-3 { animation-delay: 0.3s; }
         .stagger-4 { animation-delay: 0.4s; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .contact-main {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-  <div class="loading" id="loading">
+    <!-- Loading -->
+    <div class="loading" id="loading">
         <div class="spinner-gradient"></div>
         <div class="loading-text">Chargement</div>
         <div class="loading-logo">FormationPro</div>
     </div>
-    </div>
 
-     <!-- Header -->
+    <!-- Header -->
     <div class="pre-header">
         <div class="header">
             <h1>Contactez-nous</h1>
@@ -742,10 +664,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="container">
-      
-
-      
-
         <!-- Contact Info Cards -->
         <div class="contact-info slide-up stagger-1">
             <div class="info-card">
@@ -778,172 +696,159 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <h3 class="info-title">Email</h3>
                 <div class="info-content">
-                    <a href="mailto:contact@formation-center.co;">contact@formation-center.com</a><br>
-                    <a href="mailto:info@formation-center.co;">info@formation-center.com</a><br>
+                    <a href="mailto:contact@formation-center.com">contact@formation-center.com</a><br>
+                    <a href="mailto:info@formation-center.com">info@formation-center.com</a><br>
                     <strong>Réponse sous 24h</strong>
                 </div>
             </div>
         </div>
 
-        <!-- Contact Section -->
-        <div class="contact-section slide-up stagger-2">
-            <!-- Contact Form -->
-            <div class="contact-form">
-                <div class="form-header">
-                    <h2 class="form-title">Envoyez-nous un message</h2>
-                    <p class="form-subtitle">Remplissez le formulaire ci-dessous et nous vous répondrons rapidement</p>
-                </div>
-                
-                <?php if (!empty($message)): ?>
-                    <div class="alert alert-<?php echo $messageType; ?>">
-                        <i class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-triangle'; ?>"></i>
-                        <?php echo $message; ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if ($messageType !== 'success'): ?>
-                    <div class="required-note">
-                        <i class="fas fa-info-circle"></i>
-                        Les champs marqués d'un astérisque (*) sont obligatoires
+        <!-- Main Contact Section -->
+        <div class="contact-wrapper slide-up stagger-2">
+            <div class="contact-main">
+                <!-- Contact Form -->
+                <div class="contact-form">
+                    <div class="form-header">
+                        <h2 class="form-title">Envoyez-nous un message</h2>
+                        <p class="form-subtitle">Remplissez le formulaire ci-dessous et nous vous répondrons rapidement</p>
                     </div>
                     
-                    <form method="POST" action="" id="contactForm">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="nom" class="form-label required">Nom</label>
-                                <input type="text" id="nom" name="nom" class="form-input" required 
-                                       value="<?php echo htmlspecialchars($_POST['nom'] ?? ''); ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="prenom" class="form-label required">Prénom</label>
-                                <input type="text" id="prenom" name="prenom" class="form-input" required 
-                                       value="<?php echo htmlspecialchars($_POST['prenom'] ?? ''); ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email" class="form-label required">Email</label>
-                                <input type="email" id="email" name="email" class="form-input" required 
-                                       value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="telephone" class="form-label required">Téléphone</label>
-                                <input type="tel" id="telephone" name="telephone" class="form-input" required 
-                                       value="<?php echo htmlspecialchars($_POST['telephone'] ?? ''); ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="entreprise" class="form-label">Entreprise</label>
-                                <input type="text" id="entreprise" name="entreprise" class="form-input" 
-                                       value="<?php echo htmlspecialchars($_POST['entreprise'] ?? ''); ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="type_demande" class="form-label required">Type de demande</label>
-                                <select id="type_demande" name="type_demande" class="form-select" required>
-                                    <option value="">Sélectionnez...</option>
-                                    <option value="information" <?php echo (($_POST['type_demande'] ?? '') === 'information') ? 'selected' : ''; ?>>Information générale</option>
-                                    <option value="formation" <?php echo (($_POST['type_demande'] ?? '') === 'formation') ? 'selected' : ''; ?>>Question sur une formation</option>
-                                    <option value="devis" <?php echo (($_POST['type_demande'] ?? '') === 'devis') ? 'selected' : ''; ?>>Demande de devis</option>
-                                    <option value="partenariat" <?php echo (($_POST['type_demande'] ?? '') === 'partenariat') ? 'selected' : ''; ?>>Partenariat</option>
-                                    <option value="reclamation" <?php echo (($_POST['type_demande'] ?? '') === 'reclamation') ? 'selected' : ''; ?>>Réclamation</option>
-                                    <option value="autre" <?php echo (($_POST['type_demande'] ?? '') === 'autre') ? 'selected' : ''; ?>>Autre</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group full-width">
-                                <label for="sujet" class="form-label required">Sujet</label>
-                                <input type="text" id="sujet" name="sujet" class="form-input" required 
-                                       placeholder="Résumez votre demande en quelques mots..."
-                                       value="<?php echo htmlspecialchars($_POST['sujet'] ?? ''); ?>">
-                            </div>
-                            
-                            <div class="form-group full-width">
-                                <label for="message" class="form-label required">Message</label>
-                                <textarea id="message" name="message" class="form-input form-textarea" required 
-                                          placeholder="Décrivez votre demande en détail..."><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
-                            </div>
+                    <?php if (!empty($message)): ?>
+                        <div class="alert alert-<?php echo $messageType; ?>">
+                            <i class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-triangle'; ?>"></i>
+                            <?php echo $message; ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($messageType !== 'success'): ?>
+                        <div class="required-note">
+                            <i class="fas fa-info-circle"></i>
+                            Les champs marqués d'un astérisque (*) sont obligatoires
                         </div>
                         
+                        <form method="POST" action="" id="contactForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="nom" class="form-label required">Nom</label>
+                                    <input type="text" id="nom" name="nom" class="form-input" required 
+                                           value="<?php echo htmlspecialchars($_POST['nom'] ?? ''); ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="prenom" class="form-label required">Prénom</label>
+                                    <input type="text" id="prenom" name="prenom" class="form-input" required 
+                                           value="<?php echo htmlspecialchars($_POST['prenom'] ?? ''); ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email" class="form-label required">Email</label>
+                                    <input type="email" id="email" name="email" class="form-input" required 
+                                           value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="telephone" class="form-label required">Téléphone</label>
+                                    <input type="tel" id="telephone" name="telephone" class="form-input" required 
+                                           value="<?php echo htmlspecialchars($_POST['telephone'] ?? ''); ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="entreprise" class="form-label">Entreprise</label>
+                                    <input type="text" id="entreprise" name="entreprise" class="form-input" 
+                                           value="<?php echo htmlspecialchars($_POST['entreprise'] ?? ''); ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="type_demande" class="form-label required">Type de demande</label>
+                                    <select id="type_demande" name="type_demande" class="form-select" required>
+                                        <option value="">Sélectionnez...</option>
+                                        <option value="information" <?php echo (($_POST['type_demande'] ?? '') === 'information') ? 'selected' : ''; ?>>Information générale</option>
+                                        <option value="formation" <?php echo (($_POST['type_demande'] ?? '') === 'formation') ? 'selected' : ''; ?>>Question sur une formation</option>
+                                        <option value="devis" <?php echo (($_POST['type_demande'] ?? '') === 'devis') ? 'selected' : ''; ?>>Demande de devis</option>
+                                        <option value="partenariat" <?php echo (($_POST['type_demande'] ?? '') === 'partenariat') ? 'selected' : ''; ?>>Partenariat</option>
+                                        <option value="reclamation" <?php echo (($_POST['type_demande'] ?? '') === 'reclamation') ? 'selected' : ''; ?>>Réclamation</option>
+                                        <option value="autre" <?php echo (($_POST['type_demande'] ?? '') === 'autre') ? 'selected' : ''; ?>>Autre</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="sujet" class="form-label required">Sujet</label>
+                                    <input type="text" id="sujet" name="sujet" class="form-input" required 
+                                           placeholder="Résumez votre demande en quelques mots..."
+                                           value="<?php echo htmlspecialchars($_POST['sujet'] ?? ''); ?>">
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="message" class="form-label required">Message</label>
+                                    <textarea id="message" name="message" class="form-input form-textarea" required 
+                                              placeholder="Décrivez votre demande en détail..."><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Envoyer le message
+                                </button>
+                                <button type="reset" class="btn btn-reset">
+                                    <i class="fas fa-undo"></i>
+                                    Réinitialiser
+                                </button>
+                            </div>
+                        </form>
+                    <?php else: ?>
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-paper-plane"></i>
-                                Envoyer le message
-                            </button>
-                            <button type="reset" class="btn btn-reset">
-                                <i class="fas fa-undo"></i>
-                                Réinitialiser
-                            </button>
+                            <a href="formations.php" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                                Découvrir nos formations
+                            </a>
                         </div>
-                    </form>
-                <?php else: ?>
-                    <div class="form-actions">
-                        <a href="formations.php" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                            Découvrir nos formations
-                        </a>
-                    </div>
-                <?php endif; ?>
-            </div>
+                    <?php endif; ?>
+                </div>
 
-            <!-- Map Section -->
-            <div class="map-section">
-                <div class="map-header">
-                    <h3 class="map-title">Nous trouver</h3>
-                </div>
-                <div class="map-placeholder">
-                    <i class="fas fa-map-marked-alt" style="font-size: 3rem; margin-right: 1rem;"></i>
-                    <div>
-                        <strong>Carte interactive</strong><br>
-                        <small>Intégration Google Maps/OpenStreetMap</small>
+                <!-- Map Section -->
+                <div class="map-section">
+                    <div class="map-header">
+                        <h3 class="map-title">Nous trouver</h3>
                     </div>
-                </div>
-                <div class="map-address">
-                    <strong>Formation Center</strong><br>
-                    123 Avenue de la Formation<br>
-                    75001 Paris, France<br>
-                    <br>
-                    <i class="fas fa-metro"></i> <strong>Accès métro:</strong> Châtelet-Les Halles (lignes 1, 4, 7, 11, 14)<br>
-                    <i class="fas fa-car"></i> <strong>Parking:</strong> Parking Forum des Halles
+                    <div class="map-container">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                            <div style="text-align: center;">
+                                <strong style="color: var(--primary-color);">Carte interactive</strong><br>
+                                <small style="color: var(--light-text);">Intégration Google Maps/OpenStreetMap</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-content">
+                        <div class="map-address">
+                            <strong>Formation Center</strong><br>
+                            123 Avenue de la Formation<br>
+                            75001 Paris, France<br>
+                            <br>
+                            <i class="fas fa-subway"></i> <strong>Accès métro:</strong> Châtelet-Les Halles (lignes 1, 4, 7, 11, 14)<br>
+                            <i class="fas fa-car"></i> <strong>Parking:</strong> Parking Forum des Halles
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        
     </div>
 
     <script>
-      // Fonction de gestion du loading
+        // Fonction de gestion du loading
         function initLoading() {
             const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
             
             setTimeout(() => {
                 loading.classList.add('hidden');
-                content.classList.add('show');
             }, 3000);
         }
 
-        // Fonction pour relancer le loading
-        function restartLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
-            
-            content.classList.remove('show');
-            loading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
-         // Démarrer au chargement de la page
+        // Démarrer au chargement de la page
         window.addEventListener('load', initLoading);
     </script>
-      <?php
-// formations.php - Page client pour consulter les formations
-require_once('../../includes/footer.php');
-?>
+
+    <?php require_once('../../includes/footer.php'); ?>
 </body>
 </html>

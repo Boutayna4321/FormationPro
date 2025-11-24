@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'auth_check.php';
 require_once('../../includes/admin_sidebar.php');
 require_once 'functions.php';
 
@@ -76,22 +77,7 @@ try {
     <title>Dashboard - FormationPro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --dark-text: #2c3e50;
-            --white: #ffffff;
-            --light-gray: #f8f9fa;
-            --border-color: #e9ecef;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --sidebar-width: 280px;
-            --hover-bg: rgba(52, 152, 219, 0.1);
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --info-color: #3498db;
-        }
+        
 
         * {
             margin: 0;
@@ -889,7 +875,7 @@ try {
                                     <div class="formation-details">
                                         <i class="fas fa-user"></i> <?php echo htmlspecialchars($formation['nom_formateur']); ?> • 
                                         <i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($formation['nom_ville'] . ', ' . $formation['nom_pays']); ?> • 
-                                        <i class="fas fa-euro-sign"></i> <?php echo number_format($formation['prix'], 2); ?>€
+                                        <i class="fas fa-euro-sign"></i> <?php echo number_format($formation['prix'], 2); ?>DH
                                     </div>
                                 </div>
                                 <div class="formation-date">

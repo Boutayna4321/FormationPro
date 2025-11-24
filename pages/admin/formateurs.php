@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'auth_check.php';
 require_once('../../includes/admin_sidebar.php');
 require_once 'functions.php';
 

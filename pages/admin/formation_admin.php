@@ -1,6 +1,7 @@
 <?php
 // formations.php - Version sans Bootstrap
 session_start();
+require_once 'auth_check.php';
 require_once('../../includes/admin_sidebar.php');
 require_once 'functions.php';
 
@@ -8,6 +9,8 @@ require_once 'functions.php';
 $conn = db_connect();
 $message = "";
 $messageType = "";
+
+
 
 // ==================== TRAITEMENT DES ACTIONS ====================
 

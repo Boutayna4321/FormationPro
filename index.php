@@ -6,11 +6,103 @@
     <title>FormationPro - Excellence en Formation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Ajout du style pour le loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner-gradient {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #2c3e50 0deg,
+                #3498db 90deg,
+                #2c3e50 180deg,
+                #3498db 270deg,
+                #2c3e50 360deg
+            );
+            animation: spin 1.2s linear infinite;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .spinner-gradient::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        @keyframes spin {
+            0% { 
+                transform: rotate(0deg);
+            }
+            100% { 
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .loading-text::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        .loading-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 0.5rem;
+        }
+    </style>
 </head>
 <body>
     <!-- Loading Screen -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-gradient"></div>
+        <div class="loading-text">Chargement</div>
+        <div class="loading-logo">FormationPro</div>
     </div>
 
     <!-- Navigation -->
@@ -133,40 +225,121 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>FormationPro</h3>
-                <p>Votre partenaire de confiance pour l'excellence en formation professionnelle.</p>
-                <p>© 2024 FormationPro. Tous droits réservés.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Formations</h3>
-                <a href="#">Management</a>
-                <a href="#">Informatique</a>
-                <a href="#">Réseaux</a>
-                <a href="#">Big Data</a>
-            </div>
-            <div class="footer-section">
-                <h3>Liens Utiles</h3>
-                <a href="#">À propos</a>
-                <a href="#">Nos formateurs</a>
-                <a href="#">Témoignages</a>
-                <a href="#">FAQ</a>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Email: info@formationpro.com</p>
-                <p>Tél: +212 5XX XX XX XX</p>
-                <p>Adresse: Fès, Maroc</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>Développé avec ❤️ pour l'excellence en formation</p>
-        </div>
-    </footer>
+    <script>
+        // FormationPro - Scripts JavaScript
 
-    <script src="assets/js/script.js"></script>
+        // Loading Screen - Correction pour utiliser loadingOverlay au lieu de loading
+        window.addEventListener('load', function() {
+            const loading = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1000);
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 30px rgba(0,0,0,0.15)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            }
+        });
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target + (target < 100 ? '%' : '');
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current) + (target < 100 ? '%' : '');
+                    }
+                }, 16);
+            });
+        }
+
+        // Intersection Observer for counter animation
+        const statsSection = document.querySelector('.stats');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(statsSection);
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.feature-card, .stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Dynamic background particles (optional enhancement)
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = '2px';
+            particle.style.height = '2px';
+            particle.style.background = 'rgba(255,255,255,0.5)';
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            particle.style.animationName = 'float';
+            particle.style.animationIterationCount = 'infinite';
+            particle.style.animationTimingFunction = 'ease-in-out';
+            
+            document.querySelector('.hero').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 5000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 300);
+    </script>
+    <?php require_once('includes/footer.php'); ?>
 </body>
 </html>

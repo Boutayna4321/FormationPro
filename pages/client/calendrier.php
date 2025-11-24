@@ -746,5 +746,6 @@ $jours_semaine = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
          // Démarrer au chargement de la page
         window.addEventListener('load', initLoading);
     </script>
+    <?php require_once('../../includes/footer.php'); ?>
 </body>
 </html>
