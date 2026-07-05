@@ -66,217 +66,125 @@ $domaines = getAllDomaines($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Domaines - FormationPro</title>
     <style>
-        /* Styles généraux */
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #667eea;
+            --purple: #764ba2;
+            --text: #2c3e50;
+            --text-muted: #6c757d;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --border: #e9ecef;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --radius: 14px;
         }
-        
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            margin-left: 280px; /* Pour la sidebar */
+            padding: 32px;
         }
-        
-        /* Style pour les messages */
-        .message {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 10px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-        
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
-        }
-        
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-left: 5px solid #dc3545;
-        }
-        
-        /* Style pour les cartes */
-        .card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 20px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        /* Style pour les formulaires */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #495057;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        
-        input:focus, select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            outline: none;
-        }
-        
-        /* Style pour les boutons */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            text-align: center;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-        
-        /* Style pour les tables */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        .table th, .table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .table th {
-            background-color: rgba(102, 126, 234, 0.1);
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .table tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        /* Style pour les actions */
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        /* Style pour le titre */
-        .page-title {
-            margin-bottom: 30px;
-            color: #2c3e50;
-            font-size: 2rem;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* Style pour le loading */
+
+        /* Loading */
         .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            gap: 20px;
+            position: fixed; inset: 0; background: rgba(255,255,255,0.95);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; gap: 20px;
         }
-        
         .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
+            width: 56px; height: 56px; border: 5px solid #f0f2f5;
+            border-top: 5px solid var(--secondary); border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 1.1rem; color: var(--text); font-weight: 500; }
+
+        /* Page Header */
+        .page-title {
+            font-size: 32px; font-weight: 700; margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        
-        .loading-text {
-            font-size: 1.2rem;
-            color: #2c3e50;
+
+        /* Card */
+        .card {
+            background: var(--white); border-radius: var(--radius);
+            box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden;
         }
-        
-        /* Style responsive */
+        .card-header {
+            padding: 14px 20px; font-size: 1rem; font-weight: 600; color: var(--white);
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+        }
+        .card-body { padding: 20px; }
+
+        /* Message */
+        .message {
+            padding: 12px 16px; border-radius: 10px; margin-bottom: 16px;
+            font-weight: 500; font-size: 0.9rem; display: flex; align-items: center;
+        }
+        .message.success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+        .message.error { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+
+        /* Form */
+        .form-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: 600; color: var(--text); font-size: 0.85rem; }
+        input, select {
+            width: 100%; padding: 8px 12px; border: 1.5px solid var(--border);
+            border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; background: var(--white);
+        }
+        input:focus, select:focus {
+            outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px; border: none; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 500; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 6px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-primary { background: linear-gradient(135deg,var(--accent),var(--purple)); color: var(--white); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        .btn-danger { background: #dc3545; color: var(--white); }
+        .btn-danger:hover { background: #c82333; transform: translateY(-1px); }
+        .btn-info { background: #17a2b8; color: var(--white); }
+        .btn-info:hover { background: #138496; transform: translateY(-1px); }
+
+        /* Table */
+        .table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .table th {
+            padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text);
+            background: linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.06));
+            border-bottom: 2px solid var(--border); white-space: nowrap;
+        }
+        .table td {
+            padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle;
+        }
+        .table tr:hover { background: rgba(102,126,234,0.03); }
+
+        /* Actions */
+        .actions { display: flex; gap: 6px; }
+
+        @media (max-width: 992px) {
+            .main-content { margin-left: 0; padding: 20px 16px; padding-top: 70px; }
+            .page-title { font-size: 26px; }
+            .actions { flex-direction: column; gap: 4px; }
+        }
+
         @media (max-width: 768px) {
-            .container {
-                margin-left: 0;
-                padding: 15px;
-            }
-            
-            .card-header {
-                font-size: 1rem;
-            }
-            
-            .actions {
-                flex-direction: column;
-                gap: 5px;
-            }
+            .table td, .table th { padding: 6px 8px; font-size: 0.82rem; }
+            .container { padding: 16px; }
+            .card-header { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -287,8 +195,8 @@ $domaines = getAllDomaines($conn);
         <div class="loading-text">Chargement en cours...</div>
     </div>
 
-    <div class="container" id="mainContent">
-        <a href="dashboard.php" class="btn btn-secondary" style="margin-bottom: 20px;">← Retour au tableau de bord</a>
+    <div class="main-content" id="mainContent">
+        <div class="container">
         
         <h1 class="page-title">Gestion des Domaines</h1>
         
@@ -380,10 +288,10 @@ $domaines = getAllDomaines($conn);
                 Vous pourrez ensuite créer des sujets plus spécifiques dans chaque domaine.
             </p>
         </div>
+        </div>
     </div>
 
     <script>
-        // Gestion de l'écran de chargement
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 document.getElementById('loadingOverlay').style.display = 'none';

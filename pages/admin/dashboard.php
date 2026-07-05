@@ -68,7 +68,6 @@ try {
     $error = "Erreur lors de la récupération des données : " . $e->getMessage();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -77,216 +76,82 @@ try {
     <title>Dashboard - FormationPro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #667eea;
+            --purple: #764ba2;
+            --text: #2c3e50;
+            --text-muted: #6c757d;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --border: #e9ecef;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06);
+            --radius: 18px;
+            --header-h: 150px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--light-gray);
-            transition: margin-left 0.3s ease;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
         }
 
-        /* Sidebar Styles - Copié du fichier original */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border-right: 1px solid var(--border-color);
-            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            overflow-y: auto;
+        /* Loading Screen */
+        .loading {
+            position: fixed; inset: 0; background: var(--white); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease; gap: 1.5rem;
         }
-
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
+        .loading.hidden { opacity: 0; pointer-events: none; }
+        .spinner {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: conic-gradient(from 0deg, #2c3e50, #3498db, #667eea, #764ba2, #2c3e50);
+            animation: spin 1.2s linear infinite; position: relative;
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
         }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
+        .spinner::before {
+            content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px;
+            background: var(--white); border-radius: 50%;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 1.1rem; color: var(--text); font-weight: 500; }
+        .loading-logo { font-size: 1.4rem; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(52, 152, 219, 0.3);
-            border-radius: 10px;
-        }
-
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        }
-
-        .sidebar-logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-        }
-
-        .sidebar-subtitle {
-            text-align: center;
-            color: var(--dark-text);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            opacity: 0.7;
-            font-weight: 500;
-        }
-
-        .sidebar-nav {
-            padding: 1rem 0;
-        }
-
-        .nav-list {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin: 0.2rem 0;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            color: var(--dark-text);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            border-radius: 0 25px 25px 0;
-            margin-right: 1rem;
-        }
-
-        .nav-link:hover {
-            background: var(--hover-bg);
-            color: var(--secondary-color);
-            transform: translateX(5px);
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-link:hover::before,
-        .nav-link.active::before {
-            opacity: 1;
-        }
-
-        .nav-link.active {
-            background: var(--hover-bg);
-            color: var(--secondary-color);
-        }
-
-        .nav-icon {
-            width: 20px;
-            margin-right: 1rem;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .nav-text {
-            flex: 1;
-        }
-
-        .sidebar-footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            padding: 1rem;
-            border-top: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .logout-link {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            color: #e74c3c;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-radius: 10px;
-            border: 1px solid transparent;
-        }
-
-        .logout-link:hover {
-            background: rgba(231, 76, 60, 0.1);
-            border-color: rgba(231, 76, 60, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 2rem;
-            min-height: 100vh;
-        }
-
+        /* Page Header */
         .page-header {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            background: var(--gradient-primary);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 28px 32px; border-radius: var(--radius);
+            margin-bottom: 24px; color: var(--white);
+            height: var(--header-h); display: flex; flex-direction: column;
+            justify-content: center;
         }
-
         .page-title {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+            font-size: 42px; font-weight: 700; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 10px;
         }
+        .page-title i { font-size: 32px; }
+        .page-subtitle { font-size: 20px; opacity: 0.85; font-weight: 400; }
 
-        .page-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Stats Cards */
+        /* Stats Grid */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 24px; margin-bottom: 24px;
         }
-
         .stat-card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-            border-left: 4px solid var(--secondary-color);
+            height: 90px; background: var(--white);
+            border-radius: 14px; padding: 16px;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: var(--shadow); transition: all 0.3s ease;
+            border-left: 3px solid var(--secondary); overflow: hidden;
         }
-
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-lg);
         }
 
         .stat-card.pays { border-left-color: #3498db; }
@@ -298,14 +163,10 @@ try {
         .stat-card.formations { border-left-color: #27ae60; }
 
         .stat-icon {
-            font-size: 3rem;
-            margin-right: 1.5rem;
-            padding: 1rem;
-            border-radius: 50%;
-            background: rgba(52, 152, 219, 0.1);
-            color: var(--secondary-color);
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; background: rgba(52, 152, 219, 0.1); color: var(--secondary);
         }
-
         .stat-card.pays .stat-icon { background: rgba(52, 152, 219, 0.1); color: #3498db; }
         .stat-card.villes .stat-icon { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
         .stat-card.formateurs .stat-icon { background: rgba(230, 126, 34, 0.1); color: #e67e22; }
@@ -314,464 +175,117 @@ try {
         .stat-card.cours .stat-icon { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
         .stat-card.formations .stat-icon { background: rgba(39, 174, 96, 0.1); color: #27ae60; }
 
-        .stat-info {
-            flex: 1;
-        }
+        .stat-info { flex: 1; min-width: 0; }
+        .stat-number { font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.1; }
+        .stat-label { font-size: 14px; color: var(--text-muted); font-weight: 500; }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--dark-text);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        /* Dashboard Content Grid */
+        /* Dashboard Grid */
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;
         }
-
         .dashboard-card {
-            background: var(--white);
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
+            background: var(--white); border-radius: var(--radius);
+            box-shadow: var(--shadow); overflow: hidden;
         }
-
         .card-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border-color);
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            padding: 16px 24px; border-bottom: 1px solid var(--border);
         }
-
         .card-title {
-            font-size: 1.3rem;
-            color: var(--dark-text);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
+            font-size: 1.1rem; font-weight: 600; color: var(--text);
+            display: flex; align-items: center; gap: 8px;
         }
+        .card-title i { color: var(--secondary); }
+        .card-content { padding: 16px 24px; }
 
-        .card-title i {
-            margin-right: 0.5rem;
-            color: var(--secondary-color);
-        }
-
-        .card-content {
-            padding: 2rem;
-        }
-
-        /* Recent Formations */
         .formation-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            border-left: 3px solid var(--secondary-color);
+            display: flex; align-items: center; padding: 12px 16px;
+            border-radius: 12px; margin-bottom: 8px;
+            transition: all 0.2s; border-left: 3px solid var(--secondary);
+            background: rgba(52, 152, 219, 0.03);
         }
-
-        .formation-item:hover {
-            background: var(--light-gray);
-            transform: translateX(5px);
-        }
-
-        .formation-info {
-            flex: 1;
-        }
-
-        .formation-title {
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 0.3rem;
-        }
-
-        .formation-details {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-
+        .formation-item:hover { background: rgba(52, 152, 219, 0.06); }
+        .formation-info { flex: 1; min-width: 0; }
+        .formation-title { font-weight: 600; color: var(--text); margin-bottom: 2px; font-size: 0.95rem; }
+        .formation-details { font-size: 0.82rem; color: var(--text-muted); }
+        .formation-details i { margin-right: 2px; }
         .formation-date {
-            background: var(--gradient-primary);
-            color: var(--white);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            color: var(--white); padding: 4px 12px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 500; white-space: nowrap; margin-left: 8px;
         }
 
         /* Quick Actions */
-        .quick-actions {
-            grid-column: 1 / -1;
-        }
-
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
+        .quick-actions { grid-column: 1 / -1; }
+        .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
         .action-btn {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            background: var(--white);
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            text-decoration: none;
-            color: var(--dark-text);
-            transition: all 0.3s ease;
-            font-weight: 500;
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 18px; background: rgba(52, 152, 219, 0.04);
+            border: 1px solid var(--border); border-radius: 12px;
+            text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.9rem;
+            transition: all 0.2s;
         }
-
         .action-btn:hover {
-            border-color: var(--secondary-color);
-            background: var(--hover-bg);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--secondary); background: rgba(52, 152, 219, 0.06);
+            transform: translateY(-2px); box-shadow: var(--shadow);
+        }
+        .action-btn i { font-size: 1.3rem; color: var(--secondary); flex-shrink: 0; }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stat-card, .dashboard-card { animation: fadeUp 0.4s ease forwards; }
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.15s; }
+        .stat-card:nth-child(4) { animation-delay: 0.2s; }
+        .stat-card:nth-child(5) { animation-delay: 0.25s; }
+        .stat-card:nth-child(6) { animation-delay: 0.3s; }
+        .stat-card:nth-child(7) { animation-delay: 0.35s; }
+
+        @media (max-width: 992px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 32px; }
+            .page-title i { font-size: 26px; }
+            .page-subtitle { font-size: 17px; }
         }
 
-        .action-btn i {
-            font-size: 1.5rem;
-            margin-right: 1rem;
-            color: var(--secondary-color);
-        }
-
-        /* Charts */
-        .chart-container {
-            height: 200px;
-            display: flex;
-            align-items: end;
-            justify-content: space-around;
-            padding: 1rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-            border-radius: 10px;
-        }
-
-        .chart-bar {
-            background: var(--gradient-primary);
-            width: 30px;
-            border-radius: 5px 5px 0 0;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .chart-bar:hover {
-            transform: scale(1.1);
-        }
-
-        .chart-label {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            color: #6c757d;
-            white-space: nowrap;
-        }
-
-        /* Mobile Responsive */
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 0.8rem;
-            font-size: 1.2rem;
-            color: var(--dark-text);
-            cursor: pointer;
-            z-index: 1001;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .loading.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Spinner Gradient avec couleurs FormationPro */
-        .spinner-gradient {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                #2c3e50 0deg,
-                #3498db 90deg,
-                #2c3e50 180deg,
-                #3498db 270deg,
-                #2c3e50 360deg
-            );
-            animation: spin 1.2s linear infinite;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .spinner-gradient::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            right: 4px;
-            bottom: 4px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        /* Animation de rotation */
-        @keyframes spin {
-            0% { 
-                transform: rotate(0deg);
-            }
-            100% { 
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Texte de chargement */
-        .loading-text {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .loading-text::after {
-            content: '';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-            0% { content: ''; }
-            25% { content: '.'; }
-            50% { content: '..'; }
-            75% { content: '...'; }
-            100% { content: ''; }
-        }
-
-        /* Logo FormationPro sous le spinner */
-        .loading-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-top: 0.5rem;
-        }
-
-        /* Contenu après chargement */
-        .demo-content {
-            display: none;
-            padding: 2rem;
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        .demo-content.show {
-            display: block;
-        }
-
-        .demo-title {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-        }
-
-        .demo-text {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            margin-bottom: 2rem;
-        }
-
-         .spinner-large {
-            width: 80px;
-            height: 80px;
-        }
-
-        .spinner-large::before {
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
-        }
         @media (max-width: 768px) {
-            body {
-                margin-left: 0;
-            }
-
-            .sidebar {
-                left: -100%;
-            }
-
-            .sidebar.active {
-                left: 0;
-            }
-
-            .sidebar-toggle {
-                display: block;
-            }
-
-            .main-content {
-                padding: 1rem;
-                padding-top: 5rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
+            .main-content { padding: 20px 16px; padding-top: 70px; }
+            .page-header { height: auto; padding: 20px 24px; }
+            .page-title { font-size: 28px; }
+            .page-subtitle { font-size: 15px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 16px; }
+            .stat-card { height: 80px; padding: 12px; }
+            .stat-number { font-size: 20px; }
+            .stat-label { font-size: 13px; }
+            .stat-icon { width: 36px; height: 36px; font-size: 16px; }
+            .dashboard-grid { gap: 16px; }
+            .card-content { padding: 12px 16px; }
+            .actions-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        /* Animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @media (max-width: 480px) {
+            .actions-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 24px; }
+            .formation-item { flex-direction: column; align-items: flex-start; gap: 8px; }
         }
-
-        .stat-card,
-        .dashboard-card {
-            animation: fadeInUp 0.5s ease forwards;
-        }
-
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-        .stat-card:nth-child(5) { animation-delay: 0.5s; }
-        .stat-card:nth-child(6) { animation-delay: 0.6s; }
-        .stat-card:nth-child(7) { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
     <div class="loading" id="loading">
-        <div class="spinner-gradient"></div>
+        <div class="spinner"></div>
         <div class="loading-text">Chargement</div>
         <div class="loading-logo">FormationPro</div>
     </div>
-    </div>
-    <!-- Mobile Toggle Button -->
-    <button class="sidebar-toggle" id="sidebarToggle">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Sidebar --
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <a href="dashboard.php" class="sidebar-logo">FormationPro</a>
-            <div class="sidebar-subtitle">Administration</div>
-        </div>
-
-        <nav class="sidebar-nav">
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="../admin/dashboard.php" class="nav-link active">
-                        <i class="fas fa-tachometer-alt nav-icon"></i>
-                        <span class="nav-text">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="pays.php" class="nav-link">
-                        <i class="fas fa-globe nav-icon"></i>
-                        <span class="nav-text">Pays</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="villes.php" class="nav-link">
-                        <i class="fas fa-city nav-icon"></i>
-                        <span class="nav-text">Villes</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="formateurs.php" class="nav-link">
-                        <i class="fas fa-chalkboard-teacher nav-icon"></i>
-                        <span class="nav-text">Formateurs</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="domains.php" class="nav-link">
-                        <i class="fas fa-sitemap nav-icon"></i>
-                        <span class="nav-text">Domaines</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="sujet.php" class="nav-link">
-                        <i class="fas fa-tags nav-icon"></i>
-                        <span class="nav-text">Sujets</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="cours.php" class="nav-link">
-                        <i class="fas fa-book nav-icon"></i>
-                        <span class="nav-text">Cours</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="formation_admin.php" class="nav-link">
-                        <i class="fas fa-graduation-cap nav-icon"></i>
-                        <span class="nav-text">Formations</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="sidebar-footer">
-            <a href="logout.php" class="logout-link">
-                <i class="fas fa-sign-out-alt nav-icon"></i>
-                <span class="nav-text">Déconnexion</span>
-            </a>
-        </div>
-    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Page Header -->
         <div class="page-header">
             <h1 class="page-title">
-                <i class="fas fa-tachometer-alt" style="margin-right: 0.5rem;"></i>
+                <i class="fas fa-tachometer-alt"></i>
                 Tableau de bord
             </h1>
             <p class="page-subtitle">Vue d'ensemble de votre système de gestion des formations</p>
@@ -786,69 +300,49 @@ try {
         <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stat-card pays">
-                <div class="stat-icon">
-                    <i class="fas fa-globe"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-globe"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['pays']; ?></div>
                     <div class="stat-label">Pays</div>
                 </div>
             </div>
-
             <div class="stat-card villes">
-                <div class="stat-icon">
-                    <i class="fas fa-city"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-city"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['villes']; ?></div>
                     <div class="stat-label">Villes</div>
                 </div>
             </div>
-
             <div class="stat-card formateurs">
-                <div class="stat-icon">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['formateurs']; ?></div>
                     <div class="stat-label">Formateurs</div>
                 </div>
             </div>
-
             <div class="stat-card domaines">
-                <div class="stat-icon">
-                    <i class="fas fa-sitemap"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-sitemap"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['domaines']; ?></div>
                     <div class="stat-label">Domaines</div>
                 </div>
             </div>
-
             <div class="stat-card sujets">
-                <div class="stat-icon">
-                    <i class="fas fa-tags"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-tags"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['sujets']; ?></div>
                     <div class="stat-label">Sujets</div>
                 </div>
             </div>
-
             <div class="stat-card cours">
-                <div class="stat-icon">
-                    <i class="fas fa-book"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['cours']; ?></div>
                     <div class="stat-label">Cours</div>
                 </div>
             </div>
-
             <div class="stat-card formations">
-                <div class="stat-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
                 <div class="stat-info">
                     <div class="stat-number"><?php echo $stats['formations']; ?></div>
                     <div class="stat-label">Formations</div>
@@ -858,7 +352,6 @@ try {
 
         <!-- Dashboard Content -->
         <div class="dashboard-grid">
-            <!-- Recent Formations -->
             <div class="dashboard-card">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -873,8 +366,8 @@ try {
                                 <div class="formation-info">
                                     <div class="formation-title"><?php echo htmlspecialchars($formation['nom_cours']); ?></div>
                                     <div class="formation-details">
-                                        <i class="fas fa-user"></i> <?php echo htmlspecialchars($formation['nom_formateur']); ?> • 
-                                        <i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($formation['nom_ville'] . ', ' . $formation['nom_pays']); ?> • 
+                                        <i class="fas fa-user"></i> <?php echo htmlspecialchars($formation['nom_formateur']); ?> &bull;
+                                        <i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($formation['nom_ville'] . ', ' . $formation['nom_pays']); ?> &bull;
                                         <i class="fas fa-euro-sign"></i> <?php echo number_format($formation['prix'], 2); ?>DH
                                     </div>
                                 </div>
@@ -884,7 +377,7 @@ try {
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p style="text-align: center; color: #6c757d; padding: 2rem;">
+                        <p style="text-align: center; color: var(--text-muted); padding: 2rem;">
                             <i class="fas fa-info-circle"></i><br>
                             Aucune formation enregistrée
                         </p>
@@ -892,7 +385,6 @@ try {
                 </div>
             </div>
 
-            <!-- Popular Domains -->
             <div class="dashboard-card">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -903,17 +395,18 @@ try {
                 <div class="card-content">
                     <?php if (!empty($domaines_populaires)): ?>
                         <?php foreach ($domaines_populaires as $domaine): ?>
-                            <div class="formation-item">
+                            <div class="formation-item" style="border-left-color: #1abc9c;">
                                 <div class="formation-info">
                                     <div class="formation-title"><?php echo htmlspecialchars($domaine['nom_domaine']); ?></div>
-                                    <div class="formation-details">
-                                        <?php echo $domaine['count']; ?> formation(s)
-                                    </div>
+                                    <div class="formation-details"><?php echo $domaine['count']; ?> formation(s)</div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p style="text-align: center; color: #6c757d;">Aucune donnée disponible</p>
+                        <p style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            <i class="fas fa-info-circle"></i><br>
+                            Aucune donnée disponible
+                        </p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -943,38 +436,20 @@ try {
                     </a>
                     <a href="domains.php" class="action-btn">
                         <i class="fas fa-sitemap"></i>
-                        <br>
-                            Aucun domain enregistré
-                        </p>
-                    <?php endif; ?>
+                        Gérer les domaines
+                    </a>
                 </div>
             </div>
+        </div>
+        <?php endif; ?>
+    </main>
 
-             <script>
-        // Fonction de gestion du loading
+    <script>
         function initLoading() {
             const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
+            setTimeout(() => loading.classList.add('hidden'), 800);
         }
-
-        // Fonction pour relancer le loading
-        function restartLoading() {
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
-            
-            content.classList.remove('show');
-            loading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                content.classList.add('show');
-            }, 3000);
-        }
-         // Démarrer au chargement de la page
         window.addEventListener('load', initLoading);
     </script>
+</body>
+</html>

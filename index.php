@@ -95,6 +95,43 @@
             background-clip: text;
             margin-top: 0.5rem;
         }
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding-top: 2rem;
+                transition: left 0.3s ease;
+                z-index: 999;
+            }
+            .nav-menu.active {
+                left: 0;
+            }
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -109,11 +146,15 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">FormationPro</a>
-            <ul class="nav-menu">
+            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="index.php" class="nav-link">Accueil</a></li>
                 <li><a href="pages/client/formation.php" class="nav-link">Formations</a></li>
                 <li><a href="pages/client/calendrier.php" class="nav-link">Calendrier</a></li>
                 <li><a href="pages/client/contact.php" class="nav-link">Contact</a></li>
+                <li><a href="pages/admin/login.php" class="nav-link" style="color: #667eea;"><i class="fas fa-lock"></i> Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -335,6 +376,27 @@
             setTimeout(() => {
                 particle.remove();
             }, 5000);
+        }
+
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (navMenu.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
+            });
+            document.querySelectorAll('#navMenu .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                    mobileToggle.querySelector('i').className = 'fas fa-bars';
+                });
+            });
         }
 
         // Create particles periodically

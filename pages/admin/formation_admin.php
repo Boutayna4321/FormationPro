@@ -115,463 +115,145 @@ $formations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Gestion des Formations - FormationPro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #667eea;
+            --purple: #764ba2;
+            --text: #2c3e50;
+            --text-muted: #6c757d;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --border: #e9ecef;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --radius: 14px;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
         }
 
-        /* Styles pour l'écran de chargement */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .loading-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .spinner-gradient {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                #2c3e50 0deg,
-                #3498db 90deg,
-                #2c3e50 180deg,
-                #3498db 270deg,
-                #2c3e50 360deg
-            );
-            animation: spin 1.2s linear infinite;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .spinner-gradient::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            right: 4px;
-            bottom: 4px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .loading-text::after {
-            content: '';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-            0% { content: ''; }
-            25% { content: '.'; }
-            50% { content: '..'; }
-            75% { content: '...'; }
-            100% { content: ''; }
-        }
-
-        .loading-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-top: 0.5rem;
-        }
-
-        /* Style pour le contenu principal */
-        .main-content {
-            margin-left: 280px;
-            padding: 2rem;
-            min-height: 100vh;
-            background: #f8f9fa;
-            transition: all 0.3s ease;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        /* Loading */
+        /* Page Header */
         .page-title {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: bold;
+            font-size: 32px; font-weight: 700; margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
 
-        /* Styles des cartes */
+        /* Card */
         .card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-            overflow: hidden;
+            background: var(--white); border-radius: var(--radius);
+            box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden;
         }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-            font-size: 1.25rem;
-            font-weight: 600;
+            padding: 14px 20px; font-size: 1rem; font-weight: 600; color: var(--white);
+            background: linear-gradient(135deg, var(--accent), var(--purple));
         }
+        .card-body { padding: 20px; }
 
-        .card-body {
-            padding: 2rem;
-        }
-
-        /* Styles des alertes */
+        /* Alert */
         .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border: none;
-            font-weight: 500;
-            position: relative;
+            padding: 12px 16px; border-radius: 10px; margin-bottom: 16px;
+            font-weight: 500; font-size: 0.9rem; position: relative;
         }
-
-        .alert-success {
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .alert-danger {
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .alert-info {
-            background: linear-gradient(135deg, #cce7ff, #b3d9ff);
-            color: #0c5460;
-            border-left: 4px solid #17a2b8;
-        }
-
-        .alert-dismissible {
-            padding-right: 3rem;
-        }
-
+        .alert-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+        .alert-danger { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+        .alert-info { background: #cce7ff; color: #0c5460; border-left: 4px solid #17a2b8; }
+        .alert-dismissible { padding-right: 3rem; }
         .btn-close {
-            position: absolute;
-            top: 50%;
-            right: 1rem;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            opacity: 0.7;
+            position: absolute; top: 50%; right: 1rem; transform: translateY(-50%);
+            background: none; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0.7;
         }
+        .btn-close:hover { opacity: 1; }
 
-        .btn-close:hover {
-            opacity: 1;
-        }
-
-        /* Styles des formulaires */
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .form-group.small {
-            flex: 0 0 150px;
-        }
-
-        .form-group.tiny {
-            flex: 0 0 100px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
+        /* Form */
+        .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .form-group { flex: 1; min-width: 200px; }
+        .form-group.small { flex: 0 0 150px; }
+        .form-group.tiny { flex: 0 0 100px; }
+        .form-label { display: block; margin-bottom: 4px; font-weight: 600; color: var(--text); font-size: 0.85rem; }
         .form-control, .form-select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
+            width: 100%; padding: 8px 12px; border: 1.5px solid var(--border);
+            border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; background: var(--white);
         }
-
+        .form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center;
+            padding-right: 35px; appearance: none; cursor: pointer;
+        }
         .form-control:focus, .form-select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
         }
 
-        /* Styles des boutons */
+        /* Buttons */
         .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
+            padding: 8px 16px; border: none; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 500; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 6px;
+            text-decoration: none; transition: all 0.2s;
         }
+        .btn-primary { background: linear-gradient(135deg,var(--accent),var(--purple)); color: var(--white); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        .btn-secondary { background: #6c757d; color: var(--white); }
+        .btn-secondary:hover { background: #5a6268; transform: translateY(-1px); }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; transform: translateY(-1px); }
+        .btn-danger { background: #dc3545; color: var(--white); }
+        .btn-danger:hover { background: #c82333; transform: translateY(-1px); }
+        .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+        .btn-group { display: flex; gap: 4px; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #212529;
-        }
-
-        .btn-warning:hover {
-            background: #e0a800;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-
-        .btn-sm {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 0.25rem;
-        }
-
-        /* Styles des tableaux */
-        .table-responsive {
-            overflow-x: auto;
-            margin-top: 1rem;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .table th {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #2c3e50;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .table td {
-            padding: 1rem;
-            border-bottom: 1px solid #e9ecef;
-            vertical-align: middle;
-        }
-
-        .table tr:hover {
-            background: rgba(102, 126, 234, 0.05);
-        }
-
-        /* Styles des badges */
+        /* Badges */
         .badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            display: inline-block;
+            padding: 6px 14px; border-radius: 20px; font-size: 0.82rem;
+            font-weight: 500; display: inline-block;
         }
+        .badge.bg-primary { background: linear-gradient(135deg, var(--accent), var(--purple)); color: var(--white); }
+        .badge.bg-success { background: linear-gradient(135deg, #28a745, #20c997); color: var(--white); }
 
-        .badge.bg-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+        /* Table */
+        .table-responsive { overflow-x: auto; }
+        .table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .table th {
+            padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text);
+            background: linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.06));
+            border-bottom: 2px solid var(--border); white-space: nowrap;
         }
-
-        .badge.bg-success {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
+        .table td {
+            padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle;
         }
+        .table tr:hover { background: rgba(102,126,234,0.03); }
 
-        /* Styles des modales */
+        /* Modal */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
         }
-
-        .modal.show {
-            display: flex;
-        }
-
+        .modal.show { display: flex; }
         .modal-dialog {
-            background: white;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: var(--white); border-radius: var(--radius); max-width: 500px;
+            width: 90%; max-height: 90vh; overflow: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-
         .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 16px 20px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
+        .modal-title { font-size: 1.1rem; font-weight: 600; margin: 0; }
+        .modal-body { padding: 16px 20px; }
         .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #e9ecef;
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
+            padding: 12px 20px; border-top: 1px solid var(--border);
+            display: flex; gap: 8px; justify-content: flex-end;
         }
 
-        /* Texte avec couleurs */
-        .text-muted {
-            color: #6c757d;
-        }
-
-        .text-warning {
-            color: #ffc107;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
-                padding: 1rem;
-                padding-top: 4rem;
-            }
-
-            .form-row {
-                flex-direction: column;
-            }
-
-            .form-group {
-                min-width: auto;
-            }
-
-            .form-group.small,
-            .form-group.tiny {
-                flex: 1;
-            }
-
-            .table-responsive {
-                font-size: 0.875rem;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-        }
-
-        /* Utilitaires */
+        /* Utilities */
+        .text-muted { color: var(--text-muted); }
+        .text-warning { color: #ffc107; }
         .mb-0 { margin-bottom: 0; }
         .mb-4 { margin-bottom: 2rem; }
         .mt-4 { margin-top: 2rem; }
@@ -581,6 +263,19 @@ $formations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .d-flex { display: flex; }
         .justify-content-between { justify-content: space-between; }
         .align-items-center { align-items: center; }
+
+        @media (max-width: 992px) {
+            .main-content { margin-left: 0; padding: 20px 16px; padding-top: 70px; }
+            .page-title { font-size: 26px; }
+            .form-row { flex-direction: column; }
+            .form-group { min-width: auto; }
+            .form-group.small, .form-group.tiny { flex: 1; }
+            .btn-group { flex-direction: column; }
+        }
+
+        @media (max-width: 768px) {
+            .table td, .table th { padding: 6px 8px; font-size: 0.82rem; }
+        }
     </style>
 </head>
 <body>
@@ -772,10 +467,6 @@ $formations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
             
-            <div class="mt-4">
-                <a href="admin_dashboard.php" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Retour au tableau de bord
-                </a>
             </div>
         </div>
     </div>
